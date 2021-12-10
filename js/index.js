@@ -315,6 +315,7 @@ function makeQuestionList(res, currentPage) {
 			.replace(/\r\n/g, "")
 			.slice(0, 50);
 		date = dateFormat(date);
+		console.log(data[i]);
 		let li = `<li class="question-container">
                                 <a onclick="showQuestionDetails(${data[i].reviewRequestId})">
                         <div class="question">
@@ -333,7 +334,7 @@ function makeQuestionList(res, currentPage) {
 <!--    -->
 <!--                                        </div>-->
                                         <div class="question__info-footer">
-                                            ${data[i].languageName} · ${date}  · ${data[i].status} 
+                                           $(data[i].nickname) · ${data[i].languageName} · ${date}  · ${data[i].status} 
                                         </div>
                                     </div>
                                     <div class="question__additional-info">
