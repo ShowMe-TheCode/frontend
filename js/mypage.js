@@ -49,14 +49,13 @@ function myReceivedQuestionList(condition) {
 	});
 }
 
-$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-	console.log("ajax체크");
-	if (sessionStorage.getItem("mytoken") != null) {
-		jqXHR.setRequestHeader(
-			"Authorization",
-			"Bearer " + sessionStorage.getItem("mytoken")
-		);
-	}
+$.ajaxSetup({
+	beforeSend: function (xhr) {
+		console.log("ajax체크2");
+		if (sessionStorage.getItem("mytoken") != null) {
+			xhr.setRequestHeader("Authorization", sessionStorage.getItem("mytoken"));
+		}
+	},
 });
 
 // ========================================
