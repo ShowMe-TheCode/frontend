@@ -1,5 +1,4 @@
 let reviewerId;
-// let base_url = "http://spartashowmethecode-env.eba-8sxihvys.ap-northeast-2.elasticbeanstalk.com"
 
 $("document").ready(function () {
 	$("#select-reviewer").on("change", function () {
