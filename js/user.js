@@ -82,10 +82,10 @@ function connectSSE(key) {
 	// TODO access-token 헤더에 넣어야지 작동
 	eventSource.addEventListener("sse", function (event) {
 		console.log(event.data);
-		const data = event.data;
-		console.log(data.content);
-		if (data.content) {
-			alert(data.content);
+		let data = event.data;
+		console.log(data["content"]);
+		if (data["content"]) {
+			alert(data["content"]);
 		}
 		// (async () => {
 		//  // create and show the notification
