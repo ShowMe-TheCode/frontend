@@ -83,8 +83,8 @@ function connectSSE(key) {
 	eventSource.addEventListener("sse", function (event) {
 		console.log(event.data);
 		const data = event.data;
-		console.log(data);
-		if (data != undefined) {
+		// console.log(data);
+		if (data.content != undefined) {
 			alert(data.content);
 		}
 		// (async () => {
