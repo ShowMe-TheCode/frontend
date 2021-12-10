@@ -113,7 +113,7 @@ function getQuestionList() {
 			status: status,
 		},
 		success: function (res) {
-			console.log(res);
+			// console.log(res);
 			makeQuestionList(res, currentPage);
 		},
 	});
@@ -252,7 +252,7 @@ function makeQuestionList(res, currentPage) {
 	let data = res["data"];
 	let pagination = `<nav id="pagination-container" class="pagination is-centered is-small" role="navagation" aria-label="pagination">`;
 	let totalpage = res.totalPage;
-	console.log(totalpage);
+	// console.log(totalpage);
 
 	// 전체 페이지가 1개인 경우
 	if (totalpage == 1) {
@@ -268,7 +268,7 @@ function makeQuestionList(res, currentPage) {
                             `;
 		// 전체 페이지가 1개 이상인 경우
 	} else {
-		console.log(currentPage, totalpage);
+		// console.log(currentPage, totalpage);
 		if (currentPage < totalpage) {
 			pagination += `<a class="pagination-next" onclick="move_page(${nextPage})">다음 페이지</a>`;
 		}
