@@ -181,10 +181,10 @@ function logout() {
 			if (res["result"] == "success") {
 				sessionStorage.clear();
 				alert(res["message"]);
+				window.location.reload();
 			}
 		},
 	});
-	window.location.reload();
 }
 
 function openSigninModal() {
