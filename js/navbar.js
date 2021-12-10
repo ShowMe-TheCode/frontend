@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    let navbar = `<!--    모바일 하위 Nav바 -->
+	let navbar = `<!--    모바일 하위 Nav바 -->
     <header id="header">
         <nav class="navbar">
 
@@ -102,6 +102,6 @@ $(document).ready(function () {
                 </div>
             </div>
         </nav>
-    </header>`
-    $('#root').prepend(navbar);
+    </header>`;
+	$("#root").prepend(navbar);
 });

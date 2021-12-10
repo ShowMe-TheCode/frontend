@@ -1,23 +1,21 @@
-let base_url = "http://spartashowmethecode-env.eba-8sxihvys.ap-northeast-2.elasticbeanstalk.com"
+// let base_url =
+// 	"http://spartashowmethecode-env.eba-8sxihvys.ap-northeast-2.elasticbeanstalk.com";
 
 $(document).ready(function () {
-    let mytoken = sessionStorage.getItem("mytoken");
-    let myAuthority = sessionStorage.getItem("myAuthority")
+	let mytoken = sessionStorage.getItem("mytoken");
+	let myAuthority = sessionStorage.getItem("myAuthority");
 
-    $('#mypage-menu-list').empty()
-    if (mytoken != null && myAuthority != null) {
-        if (myAuthority === "ROLE_USER") {
-            let tmp_html = `<li id="menu-request">
+	$("#mypage-menu-list").empty();
+	if (mytoken != null && myAuthority != null) {
+		if (myAuthority === "ROLE_USER") {
+			let tmp_html = `<li id="menu-request">
                                     <a class="btn_wrap  " onclick="myRequestQuestionList('ALL')">
                                         <span>내가 요청한 코드리뷰 목록</span>
                                     </a>
-                                </li>`
-            $('#mypage-menu-list').append(tmp_html)
-
-        } else if (myAuthority === "ROLE_REVIEWER") {
-
-
-            let tmp_html = `<li id="menu-received">
+                                </li>`;
+			$("#mypage-menu-list").append(tmp_html);
+		} else if (myAuthority === "ROLE_REVIEWER") {
+			let tmp_html = `<li id="menu-received">
                                     <a class="btn_wrap " onclick="myReceivedQuestionList('ALL')">
                                         <span>나에게 요청된 코드리뷰 목록</span>
                                     </a>
@@ -26,65 +24,62 @@ $(document).ready(function () {
                                     <a class="btn_wrap  " onclick="myRequestQuestionList('ALL')">
                                         <span>내가 요청한 코드리뷰 목록</span>
                                     </a>
-                                </li>`
-            $('#mypage-menu-list').append(tmp_html);
-        }
-    }
-})
-
+                                </li>`;
+			$("#mypage-menu-list").append(tmp_html);
+		}
+	}
+});
 
 // ========================================
 // 요청받은 코드리뷰 목록 조회
 // ========================================
 function myReceivedQuestionList(condition) {
-
-    $('#condition-box').empty();
-    let tmp_html = `<button onclick="myReceivedQuestionList('ALL')" class="button is-link is-rounded">전체보기</button>&nbsp;&nbsp;
+	$("#condition-box").empty();
+	let tmp_html = `<button onclick="myReceivedQuestionList('ALL')" class="button is-link is-rounded">전체보기</button>&nbsp;&nbsp;
                     <button onclick="myReceivedQuestionList('SOLVE')" class="button is-link is-rounded">해결됨</button>&nbsp;&nbsp;
-                    <button onclick="myReceivedQuestionList('UNSOLVE')" class="button is-link is-rounded">미해결</button>`
-    $('#condition-box').append(tmp_html);
+                    <button onclick="myReceivedQuestionList('UNSOLVE')" class="button is-link is-rounded">미해결</button>`;
+	$("#condition-box").append(tmp_html);
 
-    $.ajax({
-        type: "GET",
-        url: base_url+`/user/received?status=${condition}`,
-        success: function (res) {
-            console.log(res);
-            $('#question-list').empty()
-            let reviews = res['data']
-            addReceivedReviewList(reviews);
-        }
-    })
+	$.ajax({
+		type: "GET",
+		url: base_url + `/user/received?status=${condition}`,
+		success: function (res) {
+			console.log(res);
+			$("#question-list").empty();
+			let reviews = res["data"];
+			addReceivedReviewList(reviews);
+		},
+	});
 }
 
 // ========================================
 // 내가 요청한 코드리뷰 목록
 // ========================================
 function myRequestQuestionList(condition) {
-
-    $('#condition-box').empty();
-    let tmp_html = `<button onclick="myRequestQuestionList('ALL')" class="button is-link is-rounded">전체보기</button>&nbsp;&nbsp;
+	$("#condition-box").empty();
+	let tmp_html = `<button onclick="myRequestQuestionList('ALL')" class="button is-link is-rounded">전체보기</button>&nbsp;&nbsp;
                     <button onclick="myRequestQuestionList('SOLVE')" class="button is-link is-rounded">해결됨</button>&nbsp;&nbsp;
-                    <button onclick="myRequestQuestionList('UNSOLVE')" class="button is-link is-rounded">미해결</button>`
-    $('#condition-box').append(tmp_html);
+                    <button onclick="myRequestQuestionList('UNSOLVE')" class="button is-link is-rounded">미해결</button>`;
+	$("#condition-box").append(tmp_html);
 
-    $.ajax({
-        type: "GET",
-        url: base_url+`/user/requests?status=${condition}`,
-        success: function (res) {
-            $('#question-list').empty()
-            let reviews = res['data']
-            addRequestReviewList(reviews);
-        }
-    })
+	$.ajax({
+		type: "GET",
+		url: base_url + `/user/requests?status=${condition}`,
+		success: function (res) {
+			$("#question-list").empty();
+			let reviews = res["data"];
+			addRequestReviewList(reviews);
+		},
+	});
 }
 
 //==========================//
 // 나에게 요청된 리뷰목록 랜더링
 //==========================//
 function addReceivedReviewList(reviews) {
-    if (reviews.length > 0) {
-        for (let i = 0; i < reviews.length; i++) {
-            let tmp_html = `<li class="question-container">
+	if (reviews.length > 0) {
+		for (let i = 0; i < reviews.length; i++) {
+			let tmp_html = `<li class="question-container">
                                     <a onclick="showQuestionDetailsForReview('${reviews[i].reviewRequestId}')">
                                         <div class="question-list__question  e-detail">
                                             <div class="question__info">
@@ -122,22 +117,22 @@ function addReceivedReviewList(reviews) {
                                             </div>
                                         </div>
                                     </a>
-                                </li>`
-            $('#question-list').append(tmp_html);
-        }
-    } else {
-        let tmp_html = `<p>조회된 결과가 없습니다.</p>`
-        $('#question-list').append(tmp_html);
-    }
+                                </li>`;
+			$("#question-list").append(tmp_html);
+		}
+	} else {
+		let tmp_html = `<p>조회된 결과가 없습니다.</p>`;
+		$("#question-list").append(tmp_html);
+	}
 }
 
 //==========================//
 // 내가 요청한 리뷰목록 랜더링
 //==========================//
 function addRequestReviewList(reviews) {
-    if (reviews.length > 0) {
-        for (let i = 0; i < reviews.length; i++) {
-            let tmp_html = `<li class="question-container">
+	if (reviews.length > 0) {
+		for (let i = 0; i < reviews.length; i++) {
+			let tmp_html = `<li class="question-container">
                                     <a onclick="showQuestionDetails('${reviews[i].reviewRequestId}')">
                                         <div class="question-list__question  e-detail">
                                             <div class="question__info">
@@ -175,25 +170,28 @@ function addRequestReviewList(reviews) {
                                             </div>
                                         </div>
                                     </a>
-                                </li>`
-            $('#question-list').append(tmp_html);
-        }
-    } else {
-        let tmp_html = `<p>조회된 결과가 없습니다.</p>`
-        $('#question-list').append(tmp_html);
-    }
+                                </li>`;
+			$("#question-list").append(tmp_html);
+		}
+	} else {
+		let tmp_html = `<p>조회된 결과가 없습니다.</p>`;
+		$("#question-list").append(tmp_html);
+	}
 }
 
 function showQuestionDetails(id) {
-    location.href = `details.html?id=${id}`
+	location.href = `details.html?id=${id}`;
 }
 
 function showQuestionDetailsForReview(id) {
-    location.href = `answer.html?id=${id}`
+	location.href = `answer.html?id=${id}`;
 }
 
 function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+	var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+		results = regex.exec(location.search);
+	return results == null
+		? ""
+		: decodeURIComponent(results[1].replace(/\+/g, " "));
 }
