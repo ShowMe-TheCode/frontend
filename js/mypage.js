@@ -1,6 +1,3 @@
-// let base_url =
-// 	"http://spartashowmethecode-env.eba-8sxihvys.ap-northeast-2.elasticbeanstalk.com";
-
 $(document).ready(function () {
 	let mytoken = sessionStorage.getItem("mytoken");
 	let myAuthority = sessionStorage.getItem("myAuthority");
@@ -51,6 +48,16 @@ function myReceivedQuestionList(condition) {
 		},
 	});
 }
+
+$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+	console.log("ajax체크");
+	if (sessionStorage.getItem("mytoken") != null) {
+		jqXHR.setRequestHeader(
+			"Authorization",
+			"Bearer " + sessionStorage.getItem("mytoken")
+		);
+	}
+});
 
 // ========================================
 // 내가 요청한 코드리뷰 목록

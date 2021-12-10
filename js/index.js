@@ -501,6 +501,7 @@ function getRanking() {
 // ajax 요청시 token이 있다면 헤더에 추가하도록 설정
 // ========================================
 $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+	console.log("ajax체크");
 	if (sessionStorage.getItem("mytoken") != null) {
 		jqXHR.setRequestHeader(
 			"Authorization",
