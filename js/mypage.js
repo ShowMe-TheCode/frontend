@@ -49,15 +49,6 @@ function myReceivedQuestionList(condition) {
 	});
 }
 
-$.ajaxSetup({
-	beforeSend: function (xhr) {
-		console.log("ajax체크2");
-		if (localStorage.getItem("mytoken") != null) {
-			xhr.setRequestHeader("Authorization", localStorage.getItem("mytoken"));
-		}
-	},
-});
-
 // ========================================
 // 내가 요청한 코드리뷰 목록
 // ========================================
