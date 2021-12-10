@@ -84,7 +84,7 @@ function connectSSE(key) {
 		console.log(event.data);
 		const data = event.data;
 		console.log(data.content);
-		if (!data.content) {
+		if (data.content) {
 			alert(data.content);
 		}
 		// (async () => {
