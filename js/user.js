@@ -82,49 +82,42 @@ function connectSSE(key) {
 	// TODO access-token 헤더에 넣어야지 작동
 	eventSource.addEventListener("sse", function (event) {
 		console.log(event.data);
-
 		const data = event.data;
-
-		(async () => {
-			// create and show the notification
-			const showNotification = () => {
-				// create a new notification
-				const notification = new Notification("코드 봐줘", {
-					body: data.content,
-					icon: "./img/js.png",
-				});
-
-				// close the notification after 10 seconds
-				setTimeout(() => {
-					notification.close();
-				}, 10 * 1000);
-
-				// navigate to a URL when clicked
-				notification.addEventListener("click", () => {
-					window.open(data.url, "_blank");
-				});
-			};
-
-			// show an error message
-			const showError = () => {
-				const error = document.querySelector(".error");
-				error.style.display = "block";
-				error.textContent = "You blocked the notifications";
-			};
-
-			// check notification permission
-			let granted = false;
-
-			if (Notification.permission === "granted") {
-				granted = true;
-			} else if (Notification.permission !== "denied") {
-				let permission = await Notification.requestPermission();
-				granted = permission === "granted" ? true : false;
-			}
-
-			// show notification or error
-			granted ? showNotification() : showError();
-		})();
+		alert(data.content);
+		// (async () => {
+		//  // create and show the notification
+		//  const showNotification = () => {
+		//      // create a new notification
+		//      const notification = new Notification("ShowMeTheCode", {
+		//          body: data.content
+		//      });
+		//      // close the notification after 10 seconds
+		//      setTimeout(() => {
+		//          notification.close();
+		//      }, 10 * 1000);
+		//      // navigate to a URL when clicked
+		//      notification.addEventListener("click", () => {
+		//          window.open(data.url, "_blank");
+		//      });
+		//  };
+		//  // show an error message
+		//  const showError = () => {
+		//      const error = document.querySelector(".error");
+		//      error.style.display = "block";
+		//      error.textContent = "You blocked the notifications";
+		//  };
+		//  // check notification permission
+		//  let granted = false;
+		//  if (Notification.permission === "granted") {
+		//      granted = true;
+		//  } else if (Notification.permission !== "denied") {
+		//      let permission = await Notification.requestPermission();
+		//      granted = permission === "granted" ? true : false;
+		//  }
+		//  // show notification or error
+		//  granted ? showNotification() : showError();
+		// }
+		// )();
 	});
 }
 
