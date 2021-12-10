@@ -156,7 +156,7 @@ function addAnswerHtml(answer) {
 // 댓글등록
 // ========================================
 function addComment() {
-	if (sessionStorage.getItem("mytoken") == null) {
+	if (localStorage.getItem("mytoken") == null) {
 		return alert("로그인 후 이용해주세요.");
 	}
 	let questionId = getParameterByName("id");

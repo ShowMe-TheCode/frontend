@@ -502,10 +502,10 @@ function getRanking() {
 // ========================================
 $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
 	console.log("ajax체크");
-	if (sessionStorage.getItem("mytoken") != null) {
+	if (localStorage.getItem("mytoken") != null) {
 		jqXHR.setRequestHeader(
 			"Authorization",
-			"Bearer " + sessionStorage.getItem("mytoken")
+			"Bearer " + localStorage.getItem("mytoken")
 		);
 	}
 });
@@ -531,7 +531,7 @@ function dateFormat(date) {
 
 function loginCheck() {
 	// 인증이 된 경우
-	if (sessionStorage.getItem("mytoken") != null) {
+	if (localStorage.getItem("mytoken") != null) {
 		$("#signinBtn").hide();
 		$("#signupBtn").hide();
 		$("#logoutBtn").show();

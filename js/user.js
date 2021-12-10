@@ -1,9 +1,6 @@
-// let base_url =
-// 	"http://spartashowmethecode-env.eba-8sxihvys.ap-northeast-2.elasticbeanstalk.com";
-
 $(document).ready(function () {
-	if (sessionStorage.getItem("userId") != null) {
-		let id = sessionStorage.getItem("userId");
+	if (localStorage.getItem("userId") != null) {
+		let id = localStorage.getItem("userId");
 		connectSSE(id);
 	}
 
@@ -65,9 +62,9 @@ function signin() {
 			console.log(res);
 			let id = res["id"];
 
-			sessionStorage.setItem("mytoken", res["token"]);
-			sessionStorage.setItem("myAuthority", res["authority"]);
-			sessionStorage.setItem("userId", id);
+			localStorage.setItem("mytoken", res["token"]);
+			localStorage.setItem("myAuthority", res["authority"]);
+			localStorage.setItem("userId", id);
 
 			alert("로그인에 성공했습니다.");
 			location.href = "index.html";
@@ -179,7 +176,7 @@ function logout() {
 		url: base_url + "/user/logout",
 		success: function (res) {
 			if (res["result"] == "success") {
-				sessionStorage.clear();
+				localStorage.clear();
 				alert(res["message"]);
 				window.location.reload();
 			}

@@ -1,6 +1,6 @@
 $(document).ready(function () {
-	let mytoken = sessionStorage.getItem("mytoken");
-	let myAuthority = sessionStorage.getItem("myAuthority");
+	let mytoken = localStorage.getItem("mytoken");
+	let myAuthority = localStorage.getItem("myAuthority");
 
 	$("#mypage-menu-list").empty();
 	if (mytoken != null && myAuthority != null) {
@@ -52,8 +52,8 @@ function myReceivedQuestionList(condition) {
 $.ajaxSetup({
 	beforeSend: function (xhr) {
 		console.log("ajax체크2");
-		if (sessionStorage.getItem("mytoken") != null) {
-			xhr.setRequestHeader("Authorization", sessionStorage.getItem("mytoken"));
+		if (localStorage.getItem("mytoken") != null) {
+			xhr.setRequestHeader("Authorization", localStorage.getItem("mytoken"));
 		}
 	},
 });
