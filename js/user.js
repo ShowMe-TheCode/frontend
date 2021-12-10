@@ -83,7 +83,7 @@ function connectSSE(key) {
 	eventSource.addEventListener("sse", function (event) {
 		console.log(event.data);
 
-		const data = JSON.parse(event.data);
+		const data = event.data;
 
 		(async () => {
 			// create and show the notification
