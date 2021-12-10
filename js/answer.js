@@ -45,6 +45,7 @@ function getDetails() {
 				$("#content-answer-text").show();
 				$("#content-answer-text").html(answerContent);
 				$("#question-comment-form-box2").hide();
+				$("#question-comment-form-box").hide();
 				$("#answer-section2").show();
 				$("#answer-content2").html(answerContent);
 
