@@ -1,160 +1,153 @@
+let base_url =
+	"http://spartashowmethecode-env.eba-8sxihvys.ap-northeast-2.elasticbeanstalk.com";
+
 function go_back() {
-    history.go(-1);
+	history.go(-1);
 }
 
-let base_url = "http://spartashowmethecode-env.eba-8sxihvys.ap-northeast-2.elasticbeanstalk.com"
-
-// let subscribeUrl = "http://localhost:8080"
 $(document).ready(function () {
+	loginCheck();
+	getQuestionList();
+	getRanking();
+	getRankingAll();
+	getTag();
 
-    loginCheck()
-    getQuestionList();
-    getRanking();
-    getRankingAll();
-    getTag();
+	$("ul.status")
+		.find("li")
+		.each(function (i, e) {
+			if ($(this).data("status") == getParameterByName("status")) {
+				$(this).addClass("active");
+			} else $(this).removeClass("active");
+		});
 
-    $("ul.status").find('li').each(function (i, e) {
-        if ($(this).data('status') == getParameterByName("status")) {
-            $(this).addClass('active')
-        }
-        else(
-            $(this).removeClass('active')
-        )
-    })
+	$("ul.status li").click(function () {
+		let URLSearch = new URLSearchParams(location.search);
+		$("ul.status li").removeClass("active");
+		$(this).addClass("active");
+		let status = $(this).data("status");
 
-    $("ul.status li").click(function () {
-        let URLSearch = new URLSearchParams(location.search);
-        $("ul.status li").removeClass("active")
-        $(this).addClass("active")
-        let status = $(this).data('status')
+		URLSearch.set("status", status);
 
+		let newParam = URLSearch.toString();
 
-        URLSearch.set('status', status)
-
-        let newParam = URLSearch.toString();
-
-        window.open(location.pathname + '?' + newParam, '_self')
-    })
-})
+		window.open(location.pathname + "?" + newParam, "_self");
+	});
+});
 
 // ========================================
 // 인기태그 목록
 // ========================================
-function getTag(){
-    $.ajax({
-        type: "GET",
-        url: base_url+"/question/languages/count",
-        success: function (res) {
-            let tagname = "";
-            let count = 0;
-            let list = res.sort(function (a,b){
-                return b.count - a.count;
-            });
-            for(tag in list){
-                tagname = list[tag].languageName;
-                count = list[tag].count;
-                let temp_html = `<li class="popular-tags__tag ">
+function getTag() {
+	$.ajax({
+		type: "GET",
+		url: base_url + "/question/languages/count",
+		success: function (res) {
+			let tagname = "";
+			let count = 0;
+			let list = res.sort(function (a, b) {
+				return b.count - a.count;
+			});
+			for (tag in list) {
+				tagname = list[tag].languageName;
+				count = list[tag].count;
+				let temp_html = `<li class="popular-tags__tag ">
 
                             <button onclick="getQuestionListByLanguage('${tagname}')" class="ac-button is-sm is-solid is-gray e-popular-tag ac-tag ac-tag--blue "><span class="ac-tag__hashtag">#&nbsp;</span><span class="ac-tag__name">${tagname} [${count}]</span></button>
-                            </li>`
-                $('#tag-list').append(temp_html)
-            }
-        }
-    })
+                            </li>`;
+				$("#tag-list").append(temp_html);
+			}
+		},
+	});
 }
-
 
 // ========================================
 // 언어별 코드리뷰 요청 목록보기
 // ========================================
-function getQuestionListByLanguage(language,page) {
-    $('#reviewQuestionList').empty();
-    $('#pagination-container').remove();
-    let currentPage = page;
+function getQuestionListByLanguage(language, page) {
+	$("#reviewQuestionList").empty();
+	$("#pagination-container").remove();
+	let currentPage = page;
 
-    if (!currentPage) {
-        currentPage = 1
-    }
-    nextPage = parseInt(currentPage) + 1;
-    $.ajax({
-        type: "GET",
-        url: base_url+"/question/language",
-        data: {
-            page: currentPage,
-            language: language
-        },
-        success: function (res) {
-            makeQuestionListByLanguage(language, res, currentPage);
-        }
-    })
+	if (!currentPage) {
+		currentPage = 1;
+	}
+	nextPage = parseInt(currentPage) + 1;
+	$.ajax({
+		type: "GET",
+		url: base_url + "/question/language",
+		data: {
+			page: currentPage,
+			language: language,
+		},
+		success: function (res) {
+			makeQuestionListByLanguage(language, res, currentPage);
+		},
+	});
 }
-
 
 // ========================================
 // 코드리뷰 요청 목록보기
 // ========================================
 function getQuestionList() {
-    $('#reviewQuestionList').empty();
-    let currentPage = getParameterByName('page');
-    let query = getParameterByName('query');
-    let sort = getParameterByName('sortBy');
-    let status = getParameterByName('status').toString().toUpperCase();
-    let isAsc = getParameterByName('isAsc');
-    let size = getParameterByName('size');
+	$("#reviewQuestionList").empty();
+	let currentPage = getParameterByName("page");
+	let query = getParameterByName("query");
+	let sort = getParameterByName("sortBy");
+	let status = getParameterByName("status").toString().toUpperCase();
+	let isAsc = getParameterByName("isAsc");
+	let size = getParameterByName("size");
 
-    if(!query){
-        query = null;
-    }
-    if (!currentPage) {
-        currentPage = 1
-    }
-    nextPage = parseInt(currentPage) + 1;
-    $.ajax({
-        type: "GET",
-        url: base_url+"/questions",
-        data: {
-            page: currentPage,
-            query: query,
-            status: status
-        },
-        success: function (res) {
-
-            console.log(res)
-            makeQuestionList(res, currentPage);
-        }
-    })
+	if (!query) {
+		query = null;
+	}
+	if (!currentPage) {
+		currentPage = 1;
+	}
+	nextPage = parseInt(currentPage) + 1;
+	$.ajax({
+		type: "GET",
+		url: base_url + "/questions",
+		data: {
+			page: currentPage,
+			query: query,
+			status: status,
+		},
+		success: function (res) {
+			console.log(res);
+			makeQuestionList(res, currentPage);
+		},
+	});
 }
 
-function move_page(page){
-    let URLSearch = new URLSearchParams(location.search);
-    URLSearch.set('page',page)
+function move_page(page) {
+	let URLSearch = new URLSearchParams(location.search);
+	URLSearch.set("page", page);
 
-    let newParam = URLSearch.toString();
+	let newParam = URLSearch.toString();
 
-    window.open(location.pathname + '?' + newParam,'_self')
-    // location.href = "?query="+query
+	window.open(location.pathname + "?" + newParam, "_self");
+	// location.href = "?query="+query
 }
 
+function reviewSearch() {
+	let query = $("#review-search-input").val();
+	let URLSearch = new URLSearchParams(location.search);
+	URLSearch.set("query", query);
 
-function reviewSearch(){
-    let query = $('#review-search-input').val()
-    let URLSearch = new URLSearchParams(location.search);
-    URLSearch.set('query',query)
+	let newParam = URLSearch.toString();
 
-    let newParam = URLSearch.toString();
-
-    window.open(location.pathname + '?' + newParam,'_self')
-    // location.href = "?query="+query
+	window.open(location.pathname + "?" + newParam, "_self");
+	// location.href = "?query="+query
 }
 
-function makeQuestionListByLanguage(language,res, currentPage) {
-    let data = res['data']
-    let pagination = `<nav id="pagination-container" class="pagination is-centered is-small" role="navagation" aria-label="pagination">`
-    let totalpage = res.totalPage
+function makeQuestionListByLanguage(language, res, currentPage) {
+	let data = res["data"];
+	let pagination = `<nav id="pagination-container" class="pagination is-centered is-small" role="navagation" aria-label="pagination">`;
+	let totalpage = res.totalPage;
 
-    // 전체 페이지가 1개인 경우
-    if (totalpage == 1) {
-        pagination += `
+	// 전체 페이지가 1개인 경우
+	if (totalpage == 1) {
+		pagination += `
                                     <ul class="pagination-list" id="pagingList">
                                         <li>
                                             <a class="pagination-link is-current" onclick="getQuestionListByLanguage('${language}',${1}) aria-label="1 페이지로 이동">
@@ -163,54 +156,56 @@ function makeQuestionListByLanguage(language,res, currentPage) {
                                         </li>
                                     </ul>
                                 </nav>
-                            `
-        // 전체 페이지가 1개 이상인 경우
-    } else {
-        if (currentPage < totalpage) {
-            pagination += `<a class="pagination-next" onclick="getQuestionListByLanguage('${language}',${nextPage})">다음 페이지</a>`
-        }
-        pagination += `<ul class="pagination-list" id="pagingList">`
-        for (let i = 1; i <= totalpage; i++) {
-            if (totalpage == 11) {
-                pagination += `<li>
+                            `;
+		// 전체 페이지가 1개 이상인 경우
+	} else {
+		if (currentPage < totalpage) {
+			pagination += `<a class="pagination-next" onclick="getQuestionListByLanguage('${language}',${nextPage})">다음 페이지</a>`;
+		}
+		pagination += `<ul class="pagination-list" id="pagingList">`;
+		for (let i = 1; i <= totalpage; i++) {
+			if (totalpage == 11) {
+				pagination += `<li>
                             <a class="pagination-link" onclick="getQuestionListByLanguage('${language}',${i})" aria-label="${i} 페이지로 이동">
                                 ...
                             </a>
-                        </li>`
+                        </li>`;
 
-
-                break;
-            }
-            // 현재 페이지 버튼에 대한 처리
-            if (currentPage == i) {
-                pagination += `
+				break;
+			}
+			// 현재 페이지 버튼에 대한 처리
+			if (currentPage == i) {
+				pagination += `
                                 <li>
                                     <a class="pagination-link is-current" onclick="getQuestionListByLanguage('${language}',${i})" aria-label="${i} 페이지로 이동">
                                         ${i}
                                     </a>
                                 </li>
-                                `
-            } else {
-                pagination += `
+                                `;
+			} else {
+				pagination += `
                                 <li>
                                     <a class="pagination-link" onclick="getQuestionListByLanguage('${language}',${i})" aria-label="${i} 페이지로 이동">
                                         ${i}
                                     </a>
                                 </li>
-                                `
-            }
+                                `;
+			}
+		}
+		pagination += `</ul></nav>`;
+	}
+	$("#community-body").append(pagination);
 
-        }
-        pagination += `</ul></nav>`
-    }
-    $('#community-body').append(pagination)
-
-    for (let i = 0; i < data.length; i++) {
-        let date = new Date(data[i].createdAt)
-        let content = data[i].content
-        content = content.toString().replace(/(<([^>]+)>)/ig,"").replace(/\r\n/g, "").slice(0,50)
-        date = dateFormat(date)
-        let li = `<li class="question-container">
+	for (let i = 0; i < data.length; i++) {
+		let date = new Date(data[i].createdAt);
+		let content = data[i].content;
+		content = content
+			.toString()
+			.replace(/(<([^>]+)>)/gi, "")
+			.replace(/\r\n/g, "")
+			.slice(0, 50);
+		date = dateFormat(date);
+		let li = `<li class="question-container">
                                 <a onclick="showQuestionDetails(${data[i].reviewRequestId})">
                         <div class="question">
                             <div class="question__info">
@@ -247,22 +242,21 @@ function makeQuestionListByLanguage(language,res, currentPage) {
                                         </button>
                                     </div>
                                 </div>
-                            </a></li>`
+                            </a></li>`;
 
-        $('#reviewQuestionList').append(li);
-
-    }
+		$("#reviewQuestionList").append(li);
+	}
 }
 
 function makeQuestionList(res, currentPage) {
-    let data = res['data']
-    let pagination = `<nav id="pagination-container" class="pagination is-centered is-small" role="navagation" aria-label="pagination">`
-    let totalpage = res.totalPage
-    console.log(totalpage)
+	let data = res["data"];
+	let pagination = `<nav id="pagination-container" class="pagination is-centered is-small" role="navagation" aria-label="pagination">`;
+	let totalpage = res.totalPage;
+	console.log(totalpage);
 
-    // 전체 페이지가 1개인 경우
-    if (totalpage == 1) {
-        pagination += `
+	// 전체 페이지가 1개인 경우
+	if (totalpage == 1) {
+		pagination += `
                                     <ul class="pagination-list" id="pagingList">
                                         <li>
                                             <a class="pagination-link is-current" onclick="move_page(${1}) aria-label="1 페이지로 이동">
@@ -271,55 +265,57 @@ function makeQuestionList(res, currentPage) {
                                         </li>
                                     </ul>
                                 </nav>
-                            `
-    // 전체 페이지가 1개 이상인 경우
-    } else {
-        console.log(currentPage,totalpage)
-        if (currentPage < totalpage) {
-            pagination += `<a class="pagination-next" onclick="move_page(${nextPage})">다음 페이지</a>`
-        }
-        pagination += `<ul class="pagination-list" id="pagingList">`
-        for (let i = 1; i <= totalpage; i++) {
-            if (totalpage == 11) {
-                pagination += `<li>
+                            `;
+		// 전체 페이지가 1개 이상인 경우
+	} else {
+		console.log(currentPage, totalpage);
+		if (currentPage < totalpage) {
+			pagination += `<a class="pagination-next" onclick="move_page(${nextPage})">다음 페이지</a>`;
+		}
+		pagination += `<ul class="pagination-list" id="pagingList">`;
+		for (let i = 1; i <= totalpage; i++) {
+			if (totalpage == 11) {
+				pagination += `<li>
                             <a class="pagination-link" onclick="move_page(${i})" aria-label="${i} 페이지로 이동">
                                 ...
                             </a>
-                        </li>`
+                        </li>`;
 
-
-                break;
-            }
-            // 현재 페이지 버튼에 대한 처리
-            if (currentPage == i) {
-                pagination += `
+				break;
+			}
+			// 현재 페이지 버튼에 대한 처리
+			if (currentPage == i) {
+				pagination += `
                                 <li>
                                     <a class="pagination-link is-current" onclick="move_page(${i})" aria-label="${i} 페이지로 이동">
                                         ${i}
                                     </a>
                                 </li>
-                                `
-            } else {
-                pagination += `
+                                `;
+			} else {
+				pagination += `
                                 <li>
                                     <a class="pagination-link" onclick="move_page(${i})" aria-label="${i} 페이지로 이동">
                                         ${i}
                                     </a>
                                 </li>
-                                `
-            }
+                                `;
+			}
+		}
+		pagination += `</ul></nav>`;
+	}
+	$("#community-body").append(pagination);
 
-        }
-        pagination += `</ul></nav>`
-    }
-    $('#community-body').append(pagination)
-
-    for (let i = 0; i < data.length; i++) {
-        let date = new Date(data[i].createdAt)
-        let content = data[i].content
-        content = content.toString().replace(/(<([^>]+)>)/ig,"").replace(/\r\n/g, "").slice(0,50)
-        date = dateFormat(date)
-        let li = `<li class="question-container">
+	for (let i = 0; i < data.length; i++) {
+		let date = new Date(data[i].createdAt);
+		let content = data[i].content;
+		content = content
+			.toString()
+			.replace(/(<([^>]+)>)/gi, "")
+			.replace(/\r\n/g, "")
+			.slice(0, 50);
+		date = dateFormat(date);
+		let li = `<li class="question-container">
                                 <a onclick="showQuestionDetails(${data[i].reviewRequestId})">
                         <div class="question">
                             <div class="question__info">
@@ -356,42 +352,39 @@ function makeQuestionList(res, currentPage) {
                                         </button>
                                     </div>
                                 </div>
-                            </a></li>`
+                            </a></li>`;
 
-        $('#reviewQuestionList').append(li);
-
-    }
+		$("#reviewQuestionList").append(li);
+	}
 }
 
 function showQuestionDetails(id) {
-    location.href = `details.html?id=${id}`
+	location.href = `details.html?id=${id}`;
 }
-
 
 // ========================================
 // 리뷰어 랭킹 - 전체 보기
 // ========================================
 
 function getRankingAll() {
-    $('#rankingList').empty();
-    let currentPage = getParameterByName('page');
-    if (!currentPage) {
-        currentPage = 1
-    }
-    nextPage = parseInt(currentPage) + 1;
-    $.ajax({
-        type: "GET",
-        url: base_url+"/reviewer/rank",
-        data: {
-            page: currentPage
-        },
-        success: function (res) {
-
-            let data = res['data']
-            let pagination = `<nav class="pagination is-centered is-small" role="navagation" aria-label="pagination">`
-            let totalpage = res.totalPage
-            if (totalpage == 1) {
-                pagination += `
+	$("#rankingList").empty();
+	let currentPage = getParameterByName("page");
+	if (!currentPage) {
+		currentPage = 1;
+	}
+	nextPage = parseInt(currentPage) + 1;
+	$.ajax({
+		type: "GET",
+		url: base_url + "/reviewer/rank",
+		data: {
+			page: currentPage,
+		},
+		success: function (res) {
+			let data = res["data"];
+			let pagination = `<nav class="pagination is-centered is-small" role="navagation" aria-label="pagination">`;
+			let totalpage = res.totalPage;
+			if (totalpage == 1) {
+				pagination += `
                                     <ul class="pagination-list" id="pagingList">
                                         <li>
                                             <a class="pagination-link is-current" href="?page=1" aria-label="1 페이지로 이동">
@@ -400,95 +393,90 @@ function getRankingAll() {
                                         </li>
                                     </ul>
                                 </nav>
-                            `
-            } else {
-                pagination += `<a class="pagination-next" href="?page=${nextPage}">다음 페이지</a>
-                                <ul class="pagination-list" id="pagingList">`
+                            `;
+			} else {
+				pagination += `<a class="pagination-next" href="?page=${nextPage}">다음 페이지</a>
+                                <ul class="pagination-list" id="pagingList">`;
 
-                for (let i = 1; i <= totalpage; i++) {
-                    if (totalpage == 11) {
-                        pagination += `<li>
+				for (let i = 1; i <= totalpage; i++) {
+					if (totalpage == 11) {
+						pagination += `<li>
                             <a className="pagination-link" href="?page=${i}" aria-label="${i} 페이지로 이동">
                                 ...
                             </a>
-                        </li>`
+                        </li>`;
 
-
-                        break;
-                    }
-                    if (currentPage == i) {
-                        pagination += `
+						break;
+					}
+					if (currentPage == i) {
+						pagination += `
                                 <li>
                                     <a class="pagination-link is-current" href="?page=${i}" aria-label="${i} 페이지로 이동">
                                         ${i}
                                     </a>
                                 </li>
-                                `
-                    } else {
-                        pagination += `
+                                `;
+					} else {
+						pagination += `
                                 <li>
                                     <a class="pagination-link" href="?page=${i}" aria-label="${i} 페이지로 이동">
                                         ${i}
                                     </a>
                                 </li>
-                                `
-                    }
+                                `;
+					}
+				}
+				pagination += `</ul></nav>`;
+			}
+			$("#community-body2").append(pagination);
 
-                }
-                pagination += `</ul></nav>`
-            }
-            $('#community-body2').append(pagination)
+			for (let i = 0; i < data.length; i++) {
+				let username = data[i]["username"];
+				let nickname = data[i]["nickname"];
+				let languages = data[i]["languages"];
+				let answerCount = data[i]["answerCount"];
+				let point = data[i]["point"];
+				let ranking = i + 1;
 
-            for (let i = 0; i < data.length; i++) {
-
-
-
-                let username = data[i]["username"]
-                let nickname = data[i]["nickname"]
-                let languages = data[i]["languages"];
-                let answerCount = data[i]["answerCount"];
-                let point = data[i]["point"];
-                let ranking = i + 1
-
-                let temp = ` <tr>
+				let temp = ` <tr>
                                   <th scope="row">${ranking} 위</th>
                                   <td>${nickname} 님</td>
                                   <td>${languages}</td>
                                   <td>${answerCount}</td>
                                   <td>${point}</td>
-                                </tr>`
-                $('#rankingList').append(temp);
-            } // end-for
-        }
-    })
+                                </tr>`;
+				$("#rankingList").append(temp);
+			} // end-for
+		},
+	});
 }
-
 
 // ========================================
 // 리뷰어 랭킹 - 상위 5위 목록보기
 // ========================================
-function getRanking(){
-    $.ajax({
-        type: "GET",
-        url: base_url+"/reviewer/top",
-        data: {},
-        success: function (res) {
-            for (let i = 0; i < res.length; i++){
-                let ranking = i + 1
-                let username = res[i]["username"];
-                let nickname = res[i]["nickname"];
-                let languages = res[i]["languages"];
-                let answerCount = res[i]["answerCount"];
-                let point = res[i]["point"];
+function getRanking() {
+	$.ajax({
+		type: "GET",
+		url: base_url + "/reviewer/top",
+		data: {},
+		success: function (res) {
+			for (let i = 0; i < res.length; i++) {
+				let ranking = i + 1;
+				let username = res[i]["username"];
+				let nickname = res[i]["nickname"];
+				let languages = res[i]["languages"];
+				let answerCount = res[i]["answerCount"];
+				let point = res[i]["point"];
 
-                let languages_html = `<span id="ranking-language">`;
-                for (let i=0;i<languages.length;i++) {
-                    if (i+1 === languages.length) languages_html += `<p>${languages[i]}</p>`
-                    else languages_html += `<p>${languages[i]} , </p>`
-                }
-                languages_html += `</span>`
+				let languages_html = `<span id="ranking-language">`;
+				for (let i = 0; i < languages.length; i++) {
+					if (i + 1 === languages.length)
+						languages_html += `<p>${languages[i]}</p>`;
+					else languages_html += `<p>${languages[i]} , </p>`;
+				}
+				languages_html += `</span>`;
 
-                let tmp_html = `<li class="">
+				let tmp_html = `<li class="">
                                     <div>
                                         <span>${ranking}위</span>
                                         <span>${nickname} 님</span>
@@ -499,12 +487,11 @@ function getRanking(){
                                         <span id="ranking-point">포인트 ${point}</span>
                                     </div>
                                 </li>`;
-                $("#top-ranking").append(tmp_html);
-            }
-        }
-    })
+				$("#top-ranking").append(tmp_html);
+			}
+		},
+	});
 }
-
 
 /**
  * 설정
@@ -514,61 +501,66 @@ function getRanking(){
 // ajax 요청시 token이 있다면 헤더에 추가하도록 설정
 // ========================================
 $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-    if (sessionStorage.getItem('mytoken') != null) {
-        jqXHR.setRequestHeader('Authorization', 'Bearer ' + sessionStorage.getItem('mytoken'));
-    }
+	if (sessionStorage.getItem("mytoken") != null) {
+		jqXHR.setRequestHeader(
+			"Authorization",
+			"Bearer " + sessionStorage.getItem("mytoken")
+		);
+	}
 });
 
 function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+	var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+		results = regex.exec(location.search);
+	return results == null
+		? ""
+		: decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
 function dateFormat(date) {
-    let month = date.getMonth() + 1;
-    let day = date.getDate();
+	let month = date.getMonth() + 1;
+	let day = date.getDate();
 
-    month = month >= 10 ? month : '0' + month;
-    day = day >= 10 ? day : '0' + day;
+	month = month >= 10 ? month : "0" + month;
+	day = day >= 10 ? day : "0" + day;
 
-    return date.getFullYear() + '.' + month + '.' + day;
+	return date.getFullYear() + "." + month + "." + day;
 }
 
 function loginCheck() {
-    // 인증이 된 경우
-    if (sessionStorage.getItem("mytoken") != null) {
-        $('#signinBtn').hide()
-        $('#signupBtn').hide()
-        $('#logoutBtn').show()
-        $('#mypageBtn').show()
+	// 인증이 된 경우
+	if (sessionStorage.getItem("mytoken") != null) {
+		$("#signinBtn").hide();
+		$("#signupBtn").hide();
+		$("#logoutBtn").show();
+		$("#mypageBtn").show();
 
-        $('#signinBtnMobile').hide()
-        $('#signupBtnMobile').hide()
-        $('#logoutBtnMobile').show()
-        $('#myPageBtnMobile').show()
+		$("#signinBtnMobile").hide();
+		$("#signupBtnMobile").hide();
+		$("#logoutBtnMobile").show();
+		$("#myPageBtnMobile").show();
 
+		$("#writeBtn").show();
 
-        $('#writeBtn').show()
+		$("#changeReviewContentBtn").show();
+		$("#changeReviewerBtn").show();
+		$("#deleteReviewBtn").show();
+	} else {
+		// 인증이 되지 않은 경우
+		$("#signinBtn").show();
+		$("#signupBtn").show();
+		$("#logoutBtn").hide();
+		$("#mypageBtn").hide();
 
-        $('#changeReviewContentBtn').show();
-        $('#changeReviewerBtn').show();
-        $('#deleteReviewBtn').show();
-    } else { // 인증이 되지 않은 경우
-        $('#signinBtn').show()
-        $('#signupBtn').show()
-        $('#logoutBtn').hide()
-        $('#mypageBtn').hide()
+		$("#signinBtnMobile").show();
+		$("#signupBtnMobile").show();
+		$("#logoutBtnMobile").hide();
+		$("#myPageBtnMobile").hide();
 
-        $('#signinBtnMobile').show()
-        $('#signupBtnMobile').show()
-        $('#logoutBtnMobile').hide()
-        $('#myPageBtnMobile').hide()
-
-        $('#writeBtn').hide()
-        $('#changeReviewContentBtn').hide();
-        $('#changeReviewerBtn').hide();
-        $('#deleteReviewBtn').hide();
-
-    }
+		$("#writeBtn").hide();
+		$("#changeReviewContentBtn").hide();
+		$("#changeReviewerBtn").hide();
+		$("#deleteReviewBtn").hide();
+	}
 }
