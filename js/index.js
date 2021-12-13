@@ -1,5 +1,5 @@
 let base_url =
-	"http://spartashowmethecode-env.eba-8sxihvys.ap-northeast-2.elasticbeanstalk.com";
+	"http://smtc-env.eba-xa9v6fft.ap-northeast-2.elasticbeanstalk.com";
 
 function go_back() {
 	history.go(-1);
